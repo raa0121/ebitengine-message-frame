@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>message frame</title>
+    <style>
+      .body{
+        position: relative;
+        height: 980px;
+      }
+      .absolute_transform{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: auto; /*上下左右中央に*/
+        width: 640px; /*widthの指定は必須*/
+        height: 480px; /*heightの指定は必須*/
+      }
+    </style>
+  </head>
+  <body>
+    <div class="body">
+      <div class="absolute_transform">
+        <iframe src="main.html" width="640" height="480"></iframe>
+      </div>
+    </div>
+  </body>
+</html>
