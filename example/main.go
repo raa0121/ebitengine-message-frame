@@ -21,6 +21,7 @@ var (
 	dotGothic16Source *text.GoTextFaceSource
 	dotGothic16Face   *text.GoTextFace
 	frameImage        *ebiten.Image
+	choice            int
 )
 
 func init() {
@@ -47,12 +48,18 @@ type Game struct {
 }
 
 func (g *Game) Update() error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
+		choice += 1
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
+		choice -= 1
+	}
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{0x0, 0x0, 0xff, 0xff})
-	frame.DrawFrame(screen, frameImage, []string{"abcd", "あああいいいうううえええ", "漢字テスト"}, dotGothic16Face, 10, 10)
+	frame.DrawChoiceFrame(screen, frameImage, []string{"abcd", "あああいいいうううえええ", "漢字テスト"}, choice, dotGothic16Face, 10, 10)
 	frame.DrawFrame(screen, frameImage, []string{"アメンボ赤いなあいうえお", "赤巻紙青巻紙黄巻紙", "隣の客はよく柿食う客だ"}, dotGothic16Face, 110, 310)
 }
 
