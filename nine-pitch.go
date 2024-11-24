@@ -1,3 +1,4 @@
+// https://gist.github.com/tmathews/42f663e85c333791d720d7911347eb77
 package frame
 
 import (
