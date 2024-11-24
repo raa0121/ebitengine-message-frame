@@ -25,3 +25,20 @@ func DrawFrame(screen, frameImage *ebiten.Image, strs []string, face *text.GoTex
 		text.Draw(screen, str, face, op)
 	}
 }
+
+func DrawChoiceFrame(screen, frameImage *ebiten.Image, strs []string, choice int, face *text.GoTextFace, x, y float64) {
+	if choice < 0 {
+		choice = choice % len(strs) + len(strs)
+	}
+	if len(strs) - 1 < choice {
+		choice = choice % len(strs)
+	}
+	for i, str := range strs {
+		if i == choice {
+			strs[choice] = "→" + str
+		} else {
+			strs[i] = "　" + str
+		}
+	}
+	DrawFrame(screen, frameImage, strs, face, x, y)
+}
