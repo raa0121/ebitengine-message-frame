@@ -41,7 +41,7 @@ func init() {
 		panic(err)
 	}
 	img, err := png.Decode(frameFile)
-	frameImage = ebiten.NewImageFromImage(img) 
+	frameImage = ebiten.NewImageFromImage(img)
 }
 
 type Game struct {
