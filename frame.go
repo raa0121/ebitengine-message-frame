@@ -2,10 +2,16 @@ package frame
 
 import (
 	"slices"
+	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
+
+
+type ChoicePoint struct {
+	X, Y int
+}
 
 func DrawFrame(screen, frameImage *ebiten.Image, strs []string, face *text.GoTextFace, x, y float64) {
 	var ws, hs []float64
@@ -17,11 +23,11 @@ func DrawFrame(screen, frameImage *ebiten.Image, strs []string, face *text.GoTex
 	wsMax := int(slices.Max(ws))
 	hsMax := int(slices.Min(hs))
 	pitch := NewNinePatchOfSize(frameImage, 10, 0, 0, wsMax + 10, hsMax * len(strs))
-	pitch.Draw(screen, int(x), int(y), wsMax + 20, hsMax * len(strs) + 20)
+	pitch.Draw(screen, int(x), int(y), wsMax + 40, hsMax * len(strs) + 20)
 	for i, str := range strs {
 		_, h := text.Measure(str, face, face.Size)
 		op := &text.DrawOptions{}
-		op.GeoM.Translate(x + 10 , y + 10 + h * float64(i))
+		op.GeoM.Translate(x + 20 , y + 10 + h * float64(i))
 		text.Draw(screen, str, face, op)
 	}
 }
@@ -35,10 +41,37 @@ func DrawChoiceFrame(screen, frameImage *ebiten.Image, strs []string, choice int
 	}
 	for i, str := range strs {
 		if i == choice {
-			strs[choice] = "→" + str
+			strs[choice] = " →" + str
 		} else {
-			strs[i] = "　" + str
+			strs[i] = " 　" + str
 		}
 	}
 	DrawFrame(screen, frameImage, strs, face, x, y)
+}
+
+func DrawChoiceMultiColumnFrame(screen, frameImage *ebiten.Image, strss [][]string, choicePoint ChoicePoint, face *text.GoTextFace, x, y float64) {
+	var result []string
+	if choicePoint.X < 0 {
+		choicePoint.X = choicePoint.X % len(strss) + len(strss)
+	}
+	if len(strss) - 1 < choicePoint.X {
+		choicePoint.X = choicePoint.X % len(strss)
+	}
+	if choicePoint.Y < 0 {
+		choicePoint.Y = choicePoint.Y % len(strss) + len(strss)
+	}
+	if len(strss) - 1 < choicePoint.Y {
+		choicePoint.Y = choicePoint.Y % len(strss)
+	}
+	for i, strs := range strss {
+		for j, str := range strs {
+			if i == choicePoint.Y && j == choicePoint.X {
+				strss[i][j] = " →" + str
+			} else {
+				strss[i][j] = " 　" + str
+			}
+		}
+		result = append(result, strings.Join(strs, ""))
+	}
+	DrawFrame(screen, frameImage, result, face, x, y)
 }

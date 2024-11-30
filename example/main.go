@@ -22,6 +22,7 @@ var (
 	dotGothic16Face   *text.GoTextFace
 	frameImage        *ebiten.Image
 	choice            int
+	choicePint        frame.ChoicePoint
 )
 
 func init() {
@@ -33,7 +34,7 @@ func init() {
 	dotGothic16Source = s
 	dotGothic16Face = &text.GoTextFace{
 		Source: dotGothic16Source,
-		Size: 32,
+		Size: 64,
 	}
 
 	frameFile, err := assets.Open(path.Join("assets", "frame.png"))
@@ -50,9 +51,17 @@ type Game struct {
 func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyDown) {
 		choice += 1
+		choicePint.Y += 1
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyUp) {
 		choice -= 1
+		choicePint.Y -= 1
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+		choicePint.X += 1
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
+		choicePint.X -= 1
 	}
 	return nil
 }
@@ -60,16 +69,18 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{0x0, 0x0, 0xff, 0xff})
 	frame.DrawChoiceFrame(screen, frameImage, []string{"abcd", "あああいいいうううえええ", "漢字テスト"}, choice, dotGothic16Face, 10, 10)
-	frame.DrawFrame(screen, frameImage, []string{"アメンボ赤いなあいうえお", "赤巻紙青巻紙黄巻紙", "隣の客はよく柿食う客だ"}, dotGothic16Face, 110, 310)
+	frame.DrawChoiceMultiColumnFrame(screen, frameImage, [][]string{{"abcd", "efgh"}, {"ijkl", "mnop"}}, choicePint, dotGothic16Face, 10, 300)
+	frame.DrawFrame(screen, frameImage, []string{"アメンボ赤いなあいうえお", "赤巻紙青巻紙黄巻紙", "隣の客はよく柿食う客だ"}, dotGothic16Face, 540, 730)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return 640, 480
+	return 1920, 1080
 }
 
 func main() {
 	game := &Game{}
 	ebiten.SetWindowTitle("フレームテスト")
+	ebiten.SetWindowSize(1920, 1080)
 	if err := ebiten.RunGame(game); err != nil {
 		panic(err)
 	}
